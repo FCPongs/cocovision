@@ -48,6 +48,17 @@ class TutorialPage extends StatelessWidget {
                   },
                 ),
               ),
+              // Back Button
+              Positioned(
+                top: 40,
+                left: 16,
+                child: IconButton(
+                  icon: Icon(Icons.arrow_back, color: Colors.white, size: 28),
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
               // Swipe Left Indicator
               Positioned(
                 left: 16,
