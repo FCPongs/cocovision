@@ -1,4 +1,4 @@
-name: cocovision
+name: CocoVision
 description: "A new Flutter project."
 publish_to: 'none'
 version: 0.1.0
@@ -10,7 +10,14 @@ dependencies:
   flutter:
     sdk: flutter
   image_picker: ^0.8.7+4
-
+  http: ^0.13.3
+  gallery_saver: ^2.3.0
+  http_parser: ^4.0.2
+  path: ^1.9.0
+  crop_your_image: ^1.1.0
+  system_info2: ^4.0.0
+  flutter_launcher_icons: ^0.14.1
+  provider: ^6.1.2
 
 dev_dependencies:
   flutter_test:
@@ -21,3 +28,12 @@ flutter:
   uses-material-design: true
   assets:
     - assets/logo.png
+    - assets/tutorial1.jpg
+    - assets/tutorial2.jpg
+    - assets/tutorial3.jpg
+    - assets/tutorial4.png
+
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/logo.png"

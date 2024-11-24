@@ -1,9 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'translator.dart';
 import 'camera.dart'; 
 import 'statistics.dart'; 
+import 'tutorial.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => LanguageProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -23,6 +31,9 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Access the language provider
+    final languageProvider = Provider.of<LanguageProvider>(context);
+
     return Scaffold(
       body: Column(
         children: [
@@ -32,7 +43,7 @@ class HomePage extends StatelessWidget {
               color: Colors.white,
               child: Center(
                 child: Image.asset(
-                  'assets/logo.png', 
+                  'assets/logo.png',
                   width: 1000,
                   height: 1000,
                 ),
@@ -53,20 +64,21 @@ class HomePage extends StatelessWidget {
                     height: 70,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white, 
+                        backgroundColor: Colors.white,
                         foregroundColor: const Color.fromARGB(255, 57, 132, 60),
                         textStyle: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                       ),
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (context) => const CameraPage()),
+                          MaterialPageRoute(builder: (context) =>  TutorialPage()),
                         );
                       },
-                      child: const Text('Start'),
+                      child: Text(languageProvider.isEnglish ? 'Start' : 'Simula'),
                     ),
                   ),
                   const SizedBox(height: 20),
+                  // Statistics Button
                   SizedBox(
                     width: 250,
                     height: 70,
@@ -74,7 +86,7 @@ class HomePage extends StatelessWidget {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.white,
                         foregroundColor: const Color.fromARGB(255, 63, 146, 66),
-                        textStyle: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold), 
+                        textStyle: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                       ),
                       onPressed: () {
                         Navigator.push(
@@ -82,7 +94,24 @@ class HomePage extends StatelessWidget {
                           MaterialPageRoute(builder: (context) => const StatisticsPage()),
                         );
                       },
-                      child: const Text('Statistics'),
+                      child: Text(languageProvider.isEnglish ? 'Statistics' : 'Estadistika'),
+                    ),
+                  ),
+                  const SizedBox(height: 20),
+                  // Language Toggle Button
+                  SizedBox(
+                    width: 250,
+                    height: 50,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+                        foregroundColor: const Color.fromARGB(255, 0, 0, 0),
+                        textStyle: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      onPressed: languageProvider.toggleLanguage,
+                      child: Text(languageProvider.isEnglish
+                          ? 'Switch to Filipino'
+                          : 'Lumipat sa Ingles'),
                     ),
                   ),
                 ],
@@ -92,9 +121,11 @@ class HomePage extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(10),
             color: Colors.white,
-            child: const Text(
-              "Developed & Created by Team Coco",
-              style: TextStyle(
+            child: Text(
+              languageProvider.isEnglish
+                  ? "Developed & Created by Team Coco"
+                  : "Gawa at Binuo ng Team Coco",
+              style: const TextStyle(
                 fontSize: 16,
                 color: Colors.black,
               ),
