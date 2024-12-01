@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:CocoVision/shared_preferences.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -29,15 +32,22 @@ class _CameraPageState extends State<CameraPage> {
 
   
 
-  Future<void> _takePicture() async {
-    final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
-    if (photo != null) {
-      setState(() {
-        _isCropping = true; // Show cropping UI
-        _image = File(photo.path);
-      });
-    }
+Future<void> _takePicture() async {
+  final XFile? photo = await _picker.pickImage(source: ImageSource.camera);
+
+  // Check if the user successfully took a picture
+  if (photo != null) {
+    SharedPreferencesHelper().incrementCounter('picturesTaken');
+
+    setState(() {
+      _isCropping = true; // Show cropping UI
+      _image = File(photo.path);
+    });
+  } else {
+    print('User did not capture an image.');
   }
+}
+
 
   Future<void> _uploadPicture() async {
     final XFile? photo = await _picker.pickImage(source: ImageSource.gallery);
@@ -59,7 +69,7 @@ class _CameraPageState extends State<CameraPage> {
 Future<void> _sendImageToServer() async {
   if (_croppedImage == null) return;
 
-  var uri = Uri.parse('http://192.168.254.101:5000/predict'); // Replace with your Flask server URL
+  var uri = Uri.parse('http://192.168.100.115:5000/predict'); // Replace with your Flask server URL
   var request = http.MultipartRequest('POST', uri);
 
   // Attach the cropped image to the request
@@ -84,14 +94,21 @@ Future<void> _sendImageToServer() async {
 
     // Get CPU usage (placeholder, requires custom implementation)
 
-    if (response.statusCode == 200) {
-      var responseBytes = await response.stream.toBytes();
+     if (response.statusCode == 200) {
+    // Parse the response body
+    var responseBody = await response.stream.bytesToString();
+    final parsedResponse = jsonDecode(responseBody);
+
+    // Extract imageBytes (decode base64 image) and categoryCounts
+    final Uint8List imageBytes = base64Decode(parsedResponse['image']);
+    final Map<String, int> categoryCounts = Map<String, int>.from(parsedResponse['category_counts']);
+
 
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) =>
-              DisplayPage(imageBytes: responseBytes, apiDuration: apiDuration, ramUsage: ramUsage),
+              DisplayPage(imageBytes: imageBytes, apiDuration: apiDuration, ramUsage: ramUsage, categoryCounts: categoryCounts,),
         ),
       );
     } else {
@@ -151,7 +168,10 @@ Future<void> _sendImageToServer() async {
                 ),
               ),
               ElevatedButton(
-                onPressed: () => _cropController.crop(),
+                  onPressed: () {
+                  SharedPreferencesHelper().incrementCounter('doneClicked');
+                  _cropController.crop();
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.yellowAccent,
                   padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 20),

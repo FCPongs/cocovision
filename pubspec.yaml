@@ -18,6 +18,7 @@ dependencies:
   system_info2: ^4.0.0
   flutter_launcher_icons: ^0.14.1
   provider: ^6.1.2
+  shared_preferences: ^2.3.3
 
 dev_dependencies:
   flutter_test:

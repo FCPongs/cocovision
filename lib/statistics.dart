@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'translator.dart'; // Ensure you have this provider implemented
+import 'shared_preferences.dart';
+
 
 class StatisticsPage extends StatefulWidget {
   const StatisticsPage({Key? key}) : super(key: key);
@@ -11,39 +13,52 @@ class StatisticsPage extends StatefulWidget {
 
 class _StatisticsPageState extends State<StatisticsPage> {
   late Map<String, dynamic> stats;
+   final prematureCounter = SharedPreferencesHelper().getIntValue('premature');
 
   @override
   void initState() {
     super.initState();
     stats = {
       'detected': {
-        'total': 100,
-        'premature': 30,
-        'mature': 40,
-        'overly_matured': 20,
-        'today': 10,
-        'this_week': 50,
-        'this_month': 90,
-        'this_year': 150,
-        'most_in_a_day': 15,
-        'most_in_a_week': 60,
-        'most_in_a_month': 120,
-        'most_in_a_year': 200,
+        'total': 0,
+        'premature': 0,
+        'mature': 0,
+        'overly_matured': 0,
+        'today': 0,
+        'this_week': 0,
+        'this_month': 0,
+        'this_year': 0,
+        'most_in_a_day': 0,
+        'most_in_a_week': 0,
+        'most_in_a_month': 0,
+        'most_in_a_year': 0,
       },
       'photos': {
-        'total': 500,
-        'photos_taken': 450,
-        'photos_uploaded': 400,
-        'today': 20,
-        'this_week': 150,
-        'this_month': 400,
-        'this_year': 800,
-        'most_in_a_day': 50,
-        'most_in_a_week': 180,
-        'most_in_a_month': 500,
-        'most_in_a_year': 1000,
+        'total': 0,
+        'photos_taken': 0,
+        'photos_uploaded': 0,
+        'today': 0,
+        'this_week': 0,
+        'this_month': 0,
+        'this_year': 0,
+        'most_in_a_day': 0,
+        'most_in_a_week': 0,
+        'most_in_a_month':0,
+        'most_in_a_year': 0,
       },
     };
+
+     WidgetsBinding.instance.addPostFrameCallback((_) async {
+    final photosTaken = SharedPreferencesHelper().getCounter('picturesTaken');
+    final photos_uploaded = SharedPreferencesHelper().getCounter('doneClicked');
+    var takenMost_day = 0;
+    var todayTaken = 0;
+    if (takenMost_day < todayTaken){takenMost_day = todayTaken; }
+    setState(() {
+      stats['photos']['photos_taken'] = photosTaken;
+      stats['photos']['photos_uploaded'] = photos_uploaded;
+    });
+  });
   }
 
   @override
