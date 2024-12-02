@@ -6,7 +6,6 @@ class DisplayPage extends StatelessWidget {
   final Duration apiDuration;
   final String ramUsage;
   final Map<String, int> categoryCounts;
-
   const DisplayPage({
     Key? key,
     required this.imageBytes,

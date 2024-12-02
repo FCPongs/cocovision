@@ -69,7 +69,7 @@ Future<void> _takePicture() async {
 Future<void> _sendImageToServer() async {
   if (_croppedImage == null) return;
 
-  var uri = Uri.parse('http://192.168.100.115:5000/predict'); // Replace with your Flask server URL
+  var uri = Uri.parse('http://192.168.100.115:5000/predict'); 
   var request = http.MultipartRequest('POST', uri);
 
   // Attach the cropped image to the request
@@ -83,7 +83,7 @@ Future<void> _sendImageToServer() async {
   );
 
   try {
-    final startTime = DateTime.now(); // Start timing before sending
+    final startTime = DateTime.now(); 
     var response = await request.send().timeout(Duration(seconds: 30));
     final endTime = DateTime.now(); // Stop timing after response
     final apiDuration = endTime.difference(startTime); // Calculate API duration

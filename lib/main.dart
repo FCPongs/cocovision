@@ -4,8 +4,11 @@ import 'translator.dart';
 import 'camera.dart'; 
 import 'statistics.dart'; 
 import 'tutorial.dart';
+import 'shared_preferences.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized(); // Required to run async code in main
+  await SharedPreferencesHelper().initPreferences();
   runApp(
     ChangeNotifierProvider(
       create: (context) => LanguageProvider(),

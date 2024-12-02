@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'translator.dart'; // Ensure you have this provider implemented
 import 'shared_preferences.dart';
 
-
 class StatisticsPage extends StatefulWidget {
   const StatisticsPage({Key? key}) : super(key: key);
 
@@ -13,7 +12,7 @@ class StatisticsPage extends StatefulWidget {
 
 class _StatisticsPageState extends State<StatisticsPage> {
   late Map<String, dynamic> stats;
-   final prematureCounter = SharedPreferencesHelper().getIntValue('premature');
+  final prematureCounter = SharedPreferencesHelper().getIntValue('premature');
 
   @override
   void initState() {
@@ -43,22 +42,33 @@ class _StatisticsPageState extends State<StatisticsPage> {
         'this_year': 0,
         'most_in_a_day': 0,
         'most_in_a_week': 0,
-        'most_in_a_month':0,
+        'most_in_a_month': 0,
         'most_in_a_year': 0,
       },
     };
 
-     WidgetsBinding.instance.addPostFrameCallback((_) async {
-    final photosTaken = SharedPreferencesHelper().getCounter('picturesTaken');
-    final photos_uploaded = SharedPreferencesHelper().getCounter('doneClicked');
-    var takenMost_day = 0;
-    var todayTaken = 0;
-    if (takenMost_day < todayTaken){takenMost_day = todayTaken; }
-    setState(() {
-      stats['photos']['photos_taken'] = photosTaken;
-      stats['photos']['photos_uploaded'] = photos_uploaded;
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final photosTaken = SharedPreferencesHelper().getCounter('picturesTaken');
+      final photosUploaded = SharedPreferencesHelper().getCounter('doneClicked');
+      // Add logic to retrieve the values for 'detected'
+      final prematureDetected = SharedPreferencesHelper().getCounter('premature');
+      final maturedDetected = SharedPreferencesHelper().getCounter('matured');
+      final overlyMaturedDetected = SharedPreferencesHelper().getCounter('overlyMatured');
+      
+      setState(() {
+        stats['photos']['photos_taken'] = photosTaken;
+        stats['photos']['photos_uploaded'] = photosUploaded;
+        stats['detected']['premature'] = prematureDetected;
+        stats['detected']['mature'] = maturedDetected;
+        stats['detected']['overly_matured'] = overlyMaturedDetected;
+
+        // Calculate total detected count
+        stats['detected']['total'] = prematureDetected + maturedDetected + overlyMaturedDetected;
+
+        // Calculate total photos count
+        stats['photos']['total'] = photosTaken + photosUploaded;
+      });
     });
-  });
   }
 
   @override
@@ -71,7 +81,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
         title: Text(isEnglish ? 'Statistics' : 'Istatistika'),
       ),
       body: Container(
-        color: Colors.green[800], // Dark green background
+        color: Colors.green[800],
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Column(
