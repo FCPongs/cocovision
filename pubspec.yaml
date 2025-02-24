@@ -28,11 +28,10 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
-    - assets/logo.png
-    - assets/tutorial1.jpg
-    - assets/tutorial2.jpg
-    - assets/tutorial3.jpg
-    - assets/tutorial4.png
+    - assets/tutorial1.1.jpg
+    - assets/tutorial2.1.jpg
+    - assets/tutorial3.1.jpg
+    - assets/tutorial4.1.jpg
 
 flutter_icons:
   android: "launcher_icon"

@@ -81,7 +81,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
         title: Text(isEnglish ? 'Statistics' : 'Istatistika'),
       ),
       body: Container(
-        color: Colors.green[800],
+        color: Color.fromRGBO(33, 49, 49, 1.0),
         padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Column(
